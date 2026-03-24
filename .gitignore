@@ -1,0 +1,59 @@
+# =============================================================================
+# VietLearn — Git Ignore
+# =============================================================================
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# --- Virtual Environment ---
+venv/
+.venv/
+env/
+
+# --- IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# --- Output & Temp ---
+output/
+*.wav
+*.mp3
+*.mp4
+*.mkv
+*.webm
+
+# --- AI Models (too large for Git) ---
+*.onnx
+*.bin
+*.pt
+*.pth
+piper_models/
+
+# --- Database ---
+*.db
+
+# --- Logs ---
+*.log
+
+# --- Config overrides (keep config.yaml, ignore local overrides) ---
+config/config.local.yaml
+
+# --- Test artifacts ---
+data/*.mp4
+data/*.wav
+data/*.mp3
+
+# --- OS ---
+Thumbs.db
+.DS_Store

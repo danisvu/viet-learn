@@ -1,0 +1,106 @@
+# =============================================================================
+# VietLearn — Centralized Configuration
+# =============================================================================
+# All modules read settings from this file via src/config_loader.py.
+# Do NOT hardcode paths, ports, or parameters in source code.
+# =============================================================================
+
+# --- Project paths ---
+paths:
+  data_dir: "data"
+  output_dir: "output"
+  temp_dir: "output/temp"
+  glossary_db: "data/glossary.db"
+  transcript_db: "data/transcripts.db"
+
+# --- Ollama (Translation) ---
+ollama:
+  base_url: "http://localhost:11434"
+  model: "qwen3:8b"
+  timeout: 120              # seconds per API call
+  max_retries: 3
+  retry_delay: 2            # seconds between retries
+
+# --- Translation ---
+translation:
+  prompt_template: >
+    Translate the following English text to Vietnamese.
+    Output ONLY the Vietnamese translation, nothing else.
+    Do not add explanations, notes, or formatting.
+    Text: {text}
+  batch_delay: 0.1          # seconds between API calls (avoid overwhelming)
+
+# --- Piper TTS ---
+tts:
+  model: "vi_VN-vais1000-medium"
+  output_format: "wav"
+  sample_rate: 22050
+
+# --- Time-Stretch ---
+time_stretch:
+  min_speed: 0.75           # minimum speed ratio (slower than this → pad silence)
+  max_speed: 1.6            # maximum speed ratio (faster than this → warn user)
+  method: "librosa"         # "librosa" or "ffmpeg"
+
+# --- Audio Merge ---
+audio_merge:
+  original_volume: 0.15     # 15% volume for original English audio
+  vietnamese_volume: 1.0    # 100% volume for Vietnamese audio
+  output_sample_rate: 44100
+
+# --- FFmpeg ---
+ffmpeg:
+  path: "ffmpeg"            # use system FFmpeg
+  video_codec: "copy"       # no re-encoding for video stream
+  audio_codec: "aac"
+  audio_bitrate: "192k"
+
+# --- Whisper STT (Phase 2) ---
+whisper:
+  model: "large-v3-turbo"
+  language: "en"
+  output_format: "srt"
+
+# --- YouTube / yt-dlp (Phase 2) ---
+ytdlp:
+  video_format: "bestvideo+bestaudio"
+  merge_format: "mp4"
+  subtitle_lang: "en"
+  prefer_creator_subs: true
+
+# --- Udemy (Phase 2) ---
+udemy:
+  cookies_browser: "chrome"
+  referer_pattern: "https://www.udemy.com/course/"
+
+# --- GUI (Phase 3) ---
+gui:
+  window_title: "VietLearn — Video Translation Assistant"
+  window_width: 1200
+  window_height: 800
+  theme: "system"           # "system", "light", "dark"
+
+# --- PDF Lecture Notes (Phase 4) ---
+pdf_notes:
+  scene_threshold: 0.3      # 0.0-1.0, smaller = more sensitive (more frames)
+  frame_format: "png"
+  frame_max_width: 1280
+  pdf_page_size: "A4"       # "A4" or "Letter"
+  pdf_font: "DejaVu Sans"   # font with Vietnamese Unicode support
+  include_english: true      # show both EN + VI, or VI only
+  keep_temp_frames: false    # keep extracted frames after PDF generation
+
+# --- Glossary ---
+glossary:
+  default_mode: "annotate"  # "keep_english", "annotate", "replace"
+  built_in_packs:
+    - "ai_ml"
+    - "programming"
+    - "mathematics"
+    - "general_tech"
+
+# --- Logging ---
+logging:
+  level: "INFO"             # DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+  file: "output/vietlearn.log"

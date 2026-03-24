@@ -1,0 +1,42 @@
+# =============================================================================
+# VietLearn — Python Dependencies
+# =============================================================================
+# Install: pip install -r requirements.txt
+# Environment: Python 3.11 via pyenv + venv
+# =============================================================================
+
+# --- Subtitle Parsing ---
+pysrt>=1.1.2
+webvtt-py>=0.5.1
+
+# --- Ollama API Communication ---
+requests>=2.31.0
+
+# --- Text-to-Speech ---
+piper-tts>=1.2.0
+
+# --- Audio Processing ---
+librosa>=0.10.1
+soundfile>=0.12.1
+pydub>=0.25.1
+
+# --- GUI Framework ---
+PyQt6>=6.6.0
+
+# --- Flashcard Export ---
+genanki>=0.13.0
+
+# --- PDF Lecture Notes ---
+fpdf2>=2.7.6
+Pillow>=10.2.0
+
+# --- Configuration ---
+PyYAML>=6.0.1
+
+# --- Testing ---
+pytest>=7.4.0
+pytest-mock>=3.12.0
+
+# --- Development ---
+# pyaudio          # Phase 2: BlackHole audio capture (install separately if needed)
+# yt-dlp           # Phase 2: YouTube/Udemy download (install separately)
