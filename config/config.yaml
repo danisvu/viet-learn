@@ -13,6 +13,10 @@ tts:
   model_path: piper_models/vi/vi_VN/vais1000/medium/vi_VN-vais1000-medium.onnx
   speed: 1.0
 
+audio:
+  original_volume: 0.15
+  vi_volume: 1.0
+
 time_stretch:
   max_speed_ratio: 1.6
   min_speed_ratio: 0.75

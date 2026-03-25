@@ -21,6 +21,7 @@ class AudioClip:
     actual_duration: float   # seconds, measured from WAV file
     target_duration: float   # seconds, from SRT slot (end_time - start_time)
     index: int
+    start_time: float = 0.0  # seconds, SRT start_time — position on timeline
 
 
 @dataclass
@@ -66,6 +67,7 @@ class TTSEngine:
             actual_duration=actual_duration,
             target_duration=target_duration,
             index=entry.index,
+            start_time=entry.start_time,
         )
 
     def generate_all(
