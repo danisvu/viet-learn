@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Edit",
+      "MultiEdit", 
+      "Write",
+      "Read",
+      "Glob",
+      "Grep",
+      "LS",
+      "Bash(npm run *)",
+      "Bash(npm test *)",
+      "Bash(node *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(sudo *)",
+      "Bash(curl *)",
+      "Bash(wget *)"
+    ]
+  }
+}
