@@ -21,3 +21,14 @@ class GlossaryTerm:
     english: str       # term to match (case-insensitive)
     vietnamese: str    # Vietnamese equivalent (empty for KEEP_ENGLISH)
     mode: GlossaryMode
+
+
+@dataclass
+class DownloadResult:
+    video_id: str
+    title: str
+    video_path: str
+    subtitle_path: str | None   # None if no subtitle found
+    subtitle_fallback: bool     # True = auto-generated captions were used
+    srt_not_found: bool         # True = no subtitle of any kind found
+    webpage_url: str

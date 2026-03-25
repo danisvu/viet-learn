@@ -24,3 +24,33 @@ time_stretch:
 app:
   language: vi
   log_level: INFO
+
+udemy:
+  output_dir: output/udemy
+  browser: chrome
+
+whisper:
+  model: large-v3-turbo
+  model_dir: whisper_models
+  n_threads: 4
+  language: en
+  output_dir: output/stt
+
+capture:
+  output_dir: output/captures
+  device_name: "BlackHole 2ch"
+  sample_rate: 44100
+  channels: 2
+  chunk_size: 1024
+
+imports:
+  output_dir: output/imports
+
+download:
+  output_dir: output/downloads
+  format: "bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4"
+  subtitle_langs:
+    - en
+  subtitle_format: srt
+  quiet: true
+  no_warnings: true
