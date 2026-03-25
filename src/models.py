@@ -32,3 +32,16 @@ class DownloadResult:
     subtitle_fallback: bool     # True = auto-generated captions were used
     srt_not_found: bool         # True = no subtitle of any kind found
     webpage_url: str
+
+
+@dataclass
+class BilingualEntry:
+    """One subtitle entry with both source and translated text."""
+
+    index: int
+    start: str          # "HH:MM:SS,mmm" timestamp string
+    end: str
+    text_en: str
+    text_vi: str
+    audio_path: str | None = None  # path to per-entry TTS audio clip
+    edited: bool = False

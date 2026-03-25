@@ -42,6 +42,7 @@ class YouTubeDownloader:
         self,
         url: str,
         progress_callback: ProgressCallback | None = None,
+        ytdlp_hooks: list | None = None,
     ) -> list[DownloadResult]:
         """Download video(s) from *url* and return a list of DownloadResult.
 
@@ -54,6 +55,8 @@ class YouTubeDownloader:
         """
         Path(self.config.output_dir).mkdir(parents=True, exist_ok=True)
         params = self._build_ydl_params()
+        if ytdlp_hooks:
+            params["progress_hooks"] = ytdlp_hooks
 
         with yt_dlp.YoutubeDL(params) as ydl:
             info = ydl.extract_info(url, download=True)
