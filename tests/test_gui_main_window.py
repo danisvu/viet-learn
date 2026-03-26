@@ -30,6 +30,7 @@ from src.gui.views.editor_view import EditorView
 from src.gui.views.glossary_view import GlossaryView
 from src.gui.views.history_view import HistoryView
 from src.gui.views.settings_view import SettingsView
+from src.gui.views.search_view import SearchView
 from src.gui.views.udemy_view import UdemyView
 from src.gui.views.youtube_view import YouTubeView
 
@@ -39,6 +40,7 @@ _VIEW_MAP: dict[str, type[BaseView]] = {
     "dlai":     DLAIView,
     "udemy":    UdemyView,
     "history":  HistoryView,
+    "search":   SearchView,
     "glossary": GlossaryView,
     "editor":   EditorView,
     "settings": SettingsView,
@@ -67,7 +69,7 @@ def sidebar(qapp):
 
 class TestSidebar:
     def test_has_correct_number_of_buttons(self, sidebar):
-        assert len(_ALL_NAV_NAMES) == 7
+        assert len(_ALL_NAV_NAMES) == 8
         for name in _ALL_NAV_NAMES:
             assert sidebar.button(name) is not None
 
@@ -129,7 +131,7 @@ class TestMainWindowStructure:
         assert isinstance(window.stack, QStackedWidget)
 
     def test_stack_has_six_widgets(self, window):
-        assert window.stack.count() == 7
+        assert window.stack.count() == 8
 
     def test_all_view_names_registered(self, window):
         for name in _ALL_NAV_NAMES:
@@ -308,9 +310,9 @@ class TestGlossaryView:
         v = GlossaryView()
         assert hasattr(v, "table")
 
-    def test_table_has_three_columns(self, qapp):
+    def test_table_has_four_columns(self, qapp):
         v = GlossaryView()
-        assert v.table.columnCount() == 3
+        assert v.table.columnCount() == 4
 
     def test_has_add_button(self, qapp):
         v = GlossaryView()
