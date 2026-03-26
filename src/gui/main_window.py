@@ -16,6 +16,7 @@ from src.gui.views.dlai_view import DLAIView
 from src.gui.views.editor_view import EditorView
 from src.gui.views.glossary_view import GlossaryView
 from src.gui.views.history_view import HistoryView
+from src.gui.views.search_view import SearchView
 from src.gui.views.settings_view import SettingsView
 from src.gui.views.udemy_view import UdemyView
 from src.gui.views.youtube_view import YouTubeView
@@ -26,6 +27,7 @@ _VIEW_REGISTRY: list[tuple[str, type[QWidget]]] = [
     ("dlai",     DLAIView),
     ("udemy",    UdemyView),
     ("history",  HistoryView),
+    ("search",   SearchView),
     ("glossary", GlossaryView),
     ("editor",   EditorView),
     ("settings", SettingsView),

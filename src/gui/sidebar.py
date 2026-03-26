@@ -17,6 +17,7 @@ NAV_ITEMS: list[tuple[str, str]] = [
     ("dlai",     "DeepLearning.AI"),
     ("udemy",    "Udemy"),
     ("history",  "History"),
+    ("search",   "Search"),
     ("glossary", "Glossary"),
     ("editor",   "Transcript Editor"),
     ("settings", "Settings"),
