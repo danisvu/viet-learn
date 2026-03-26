@@ -46,6 +46,20 @@ capture:
 imports:
   output_dir: output/imports
 
+scene:
+  threshold: 0.3            # scene-change sensitivity (0.0–1.0)
+  output_dir: output/frames
+  format: jpg               # frame image format: jpg or png
+
+pdf:
+  # Path to a Unicode TTF font for Vietnamese rendering.
+  # Leave empty to use the macOS system Arial (auto-detected).
+  font_path: ""
+  output_dir: output/pdf
+  image_height_ratio: 0.60  # fraction of usable page height for frame image
+  en_font_size: 9
+  vi_font_size: 12
+
 download:
   output_dir: output/downloads
   format: "bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4"

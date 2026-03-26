@@ -21,6 +21,7 @@ class GlossaryTerm:
     english: str       # term to match (case-insensitive)
     vietnamese: str    # Vietnamese equivalent (empty for KEEP_ENGLISH)
     mode: GlossaryMode
+    pack: str = "Custom"  # term pack: AI/ML, Programming, Math, Custom
 
 
 @dataclass
@@ -45,3 +46,39 @@ class BilingualEntry:
     text_vi: str
     audio_path: str | None = None  # path to per-entry TTS audio clip
     edited: bool = False
+
+
+@dataclass
+class FrameInfo:
+    """One scene-change frame extracted from a video."""
+
+    frame_index: int    # 1-based, matches frame filename (frame0001.jpg)
+    timestamp: float    # seconds from video start
+    frame_path: str     # absolute/relative path to extracted image
+
+
+@dataclass
+class PageContent:
+    """One page of PDF notes: a frame image paired with its subtitle entries."""
+
+    frame: FrameInfo
+    entries: list       # list[SubtitleEntry | BilingualEntry]
+    page_number: int = 0
+
+
+@dataclass
+class SearchResult:
+    """One FTS hit returned from TranscriptDB.search()."""
+
+    transcript_id: int
+    title: str
+    platform: str
+    date_added: str     # ISO 8601 date string "YYYY-MM-DD"
+    topic: str | None
+    entry_id: int
+    entry_index: int
+    start_ms: int       # subtitle start in milliseconds
+    end_ms: int
+    text_en: str
+    text_vi: str
+    snippet: str        # short excerpt with matched terms highlighted
