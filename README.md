@@ -8,9 +8,9 @@
 | **FFmpeg** | ✅ Đã có | `/opt/homebrew/bin/ffmpeg` |
 | **Ollama** | ✅ Đã có | `/opt/homebrew/bin/ollama` |
 | **yt-dlp** (Python) | ✅ Đã có | trong venv |
-| **Piper TTS** | ❌ **Chưa cài** | cần cài cho Phase 1 TTS |
-| **PyAudio** | ❌ **Chưa cài** | cần cho Phase 2 audio capture |
-| **pywhispercpp** | ❌ **Chưa cài** | cần cho Phase 2 Whisper STT |
+| **Piper TTS** | ✅ Đã có | `piper-tts` + model `vi_VN-vais1000-medium` |
+| **PyAudio** | ✅ Đã có | portaudio + pyaudio 0.2.14 |
+| **pywhispercpp** | ✅ Đã có | pywhispercpp 1.4.1 |
 
 ---
 
@@ -38,13 +38,13 @@ venv/bin/python -m pip install --upgrade pip
 venv/bin/python -m pip install -r requirements.txt
 ```
 
-### 2.4 Cài Piper TTS (cho chức năng Text-to-Speech)
+### 2.4 Piper TTS (✅ đã cài sẵn — chỉ cần nếu reset lại)
+
+Package `piper-tts` và model `vi_VN-vais1000-medium` đã có trong venv và `piper_models/`. Nếu cần cài lại từ đầu:
 
 ```bash
-# Cài piper binary
 venv/bin/python -m pip install piper-tts
 
-# Tải model giọng Việt (vi_VN-vais1000-medium)
 mkdir -p piper_models/vi/vi_VN/vais1000/medium
 cd piper_models/vi/vi_VN/vais1000/medium
 curl -LO "https://huggingface.co/rhasspy/piper-voices/resolve/main/vi/vi_VN/vais1000/medium/vi_VN-vais1000-medium.onnx"
@@ -65,14 +65,14 @@ ollama serve &
 ollama pull qwen3:8b
 ```
 
-### 2.6 Cài thêm (tùy chọn — cho Phase 2)
+### 2.6 Cài thêm (✅ đã cài sẵn — chỉ cần nếu reset lại)
 
 ```bash
 # PyAudio — ghi audio hệ thống qua BlackHole
 brew install portaudio
 venv/bin/python -m pip install pyaudio
 
-# pywhispercpp — speech-to-text
+# pywhispercpp — speech-to-text (có prebuilt wheel cho Apple Silicon)
 venv/bin/python -m pip install pywhispercpp
 ```
 
@@ -80,70 +80,96 @@ venv/bin/python -m pip install pywhispercpp
 
 ## 3. Chạy Project
 
+> **Quan trọng:** Tất cả lệnh bên dưới phải chạy từ **thư mục gốc của project**:
+> ```bash
+> cd /Users/vohien/hi8n/workspace/personal/viet-learn
+> ```
+
 ### 3.1 Chạy GUI (giao diện đồ họa — khuyến nghị)
 
 ```bash
 venv/bin/python -c "from src.gui.main_window import app_main; app_main()"
 ```
 
-Cửa sổ VietLearn sẽ hiện ra với sidebar gồm các tab:
-- **YouTube** — paste URL video/playlist, download + xử lý tự động
-- **DeepLearning.AI** — kéo thả video + subtitle file
-- **Udemy** — nhập URL + dùng browser cookies
-- **History** — lịch sử các video đã xử lý
-- **Search** — tìm kiếm full-text trong transcript
-- **Glossary** — quản lý từ vựng chuyên ngành
-- **Editor** — xem/chỉnh sửa transcript song ngữ
-- **Settings** — cấu hình model, giọng TTS, tốc độ
+Cửa sổ VietLearn sẽ hiện ra với sidebar gồm 8 tab:
 
-### 3.2 Chạy CLI (command line)
+| Tab | Chức năng |
+|-----|-----------|
+| **YouTube** | Paste URL video/playlist → download + xử lý tự động |
+| **DeepLearning.AI** | Kéo thả video + subtitle file vào |
+| **Udemy** | Nhập URL + dùng browser cookies để tải |
+| **History** | Xem lịch sử các video đã xử lý |
+| **Search** | Tìm kiếm full-text trong toàn bộ transcript |
+| **Glossary** | Quản lý từ vựng chuyên ngành (AI/ML, Lập trình…) |
+| **Transcript Editor** | Xem/chỉnh sửa transcript song ngữ EN+VI |
+| **Settings** | Cấu hình model, giọng TTS, tốc độ |
+
+### 3.2 Chạy CLI (command line — pipeline đầy đủ)
+
+Cần có **Ollama đang chạy** (`ollama serve`) trước khi dùng.
 
 ```bash
 # Cú pháp cơ bản
 venv/bin/python -m src \
   --video path/to/video.mp4 \
-  --srt path/to/subtitles.srt \
+  --srt   path/to/subtitles.srt \
   --output ./output/
 
 # Với glossary tuỳ chỉnh
 venv/bin/python -m src \
-  --video lecture.mp4 \
-  --srt lecture.srt \
-  --output ./output/ \
+  --video   lecture.mp4 \
+  --srt     lecture.srt \
+  --output  ./output/ \
   --glossary glossary.json
 
-# Với file VTT
+# Với file VTT (tự động convert)
 venv/bin/python -m src \
-  --video lecture.mp4 \
-  --srt lecture.vtt \
+  --video  lecture.mp4 \
+  --srt    lecture.vtt \
   --output ./output/
 ```
 
-**CLI Pipeline flow:**
-1. Parse SRT/VTT → 2. Dịch EN→VI (Ollama) → 3. Ghi file SRT →
-4. TTS từng entry → 5. Time-stretch → 6. Ghép audio → 7. Merge video
+**Pipeline flow (7 bước tự động):**
+```
+SRT/VTT → Dịch EN→VI (Ollama/Qwen3) → Ghi SRT song ngữ
+       → TTS từng entry (Piper) → Time-stretch → Ghép audio → Merge video
+```
 
 ### 3.3 Tạo PDF Notes từ video
 
+Trích frame theo scene change + gắn phụ đề → xuất PDF.
+
 ```bash
 venv/bin/python -m src.pdf_notes \
-  --video lecture.mp4 \
-  --srt lecture.srt \
-  --output ./output/pdf/
+  --video  lecture.mp4 \
+  --srt    lecture.srt \
+  --output ./output/pdf/lecture_notes.pdf
+
+# Tùy chỉnh độ nhạy scene detection (0.0 = rất nhiều frame, 1.0 = rất ít)
+venv/bin/python -m src.pdf_notes \
+  --video     lecture.mp4 \
+  --srt       lecture.srt \
+  --output    ./output/pdf/lecture_notes.pdf \
+  --threshold 0.4
 ```
+
+> **Lưu ý:** `--output` là đường dẫn **file .pdf** cụ thể, không phải thư mục.
 
 ### 3.4 Chạy tests
 
 ```bash
-# Toàn bộ test suite
+# Toàn bộ test suite (~960 tests)
 venv/bin/python -m pytest tests/ -v
 
-# Chạy test một module cụ thể
+# Một module cụ thể
 venv/bin/python -m pytest tests/test_srt_parser.py -v
 
-# Chạy test với coverage (cần cài pytest-cov)
-venv/bin/python -m pytest tests/ --cov=src --cov-report=term-missing
+# Chỉ xem kết quả pass/fail, không cần verbose
+venv/bin/python -m pytest tests/ -q
 ```
+
+> **Lưu ý:** Dùng `venv/bin/python -m pytest` thay vì `venv/bin/pytest`
+> vì script `venv/bin/pytest` có broken shebang do project được di chuyển thư mục.
 
 ---
 
@@ -159,6 +185,10 @@ File config tại `config/config.yaml`. Các phần quan trọng:
 | `audio.original_volume` | Âm lượng gốc (nền) | `0.15` |
 | `time_stretch.max_speed_ratio` | Tốc độ tối đa TTS | `1.6` |
 | `download.output_dir` | Thư mục tải video | `output/downloads` |
+| `scene.threshold` | Độ nhạy phát hiện cảnh quay (0–1) | `0.3` |
+| `scene.output_dir` | Thư mục lưu ảnh frame | `output/frames` |
+| `pdf.font_path` | Đường dẫn font TTF hỗ trợ tiếng Việt | `""` (tự tìm Arial) |
+| `pdf.image_height_ratio` | Tỉ lệ ảnh frame chiếm chiều cao trang | `0.60` |
 
 ---
 
@@ -168,6 +198,13 @@ Sau khi chạy pipeline, thư mục output chứa:
 
 ```
 output/
+├── downloads/               # Video tải về từ YouTube / Udemy
+├── frames/                  # Ảnh frame trích từ scene detection
+│   ├── frame0001.jpg
+│   ├── frame0002.jpg
+│   └── ...
+├── pdf/                     # PDF lecture notes
+│   └── lecture_notes.pdf
 ├── video_bilingual.srt      # SRT song ngữ EN + VI
 ├── video_vi.srt             # SRT chỉ tiếng Việt
 ├── video_vi_audio.wav       # Audio tiếng Việt
